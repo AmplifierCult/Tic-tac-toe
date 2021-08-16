@@ -1,7 +1,5 @@
 package com.company.table;
 
-import java.util.Arrays;
-
 public class Table {
     private final CellState [][] table;
     private int count;
@@ -39,12 +37,13 @@ public class Table {
     /**
      * Очищает таблицу.
      */
-    private void clear() {
+    public void clear() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 table[i][j] = CellState.UNSET;
             }
         }
+        count = 0;
     }
 
     private void validateValue(CellState value) throws CellException {
@@ -59,12 +58,51 @@ public class Table {
         }
     }
 
-   // TODO написать toString
     @Override
     public String toString() {
-        return "Table{" +
-                "table=" + Arrays.toString(table) +
-                ", count=" + count +
-                '}';
+        StringBuilder table = new StringBuilder();
+        table.append("+-----+-----+-----+\n");
+        table.append("|  ");
+        try {
+            table.append(getChar(this.table[0][0]));
+            table.append("  |  ");
+            table.append(getChar(this.table[0][1]));
+            table.append("  |  ");
+            table.append(getChar(this.table[0][2]));
+            table.append("  |\n");
+            table.append("+-----+-----+-----+\n");
+            table.append("|  ");
+            table.append(getChar(this.table[1][0]));
+            table.append("  |  ");
+            table.append(getChar(this.table[1][1]));
+            table.append("  |  ");
+            table.append(getChar(this.table[1][2]));
+            table.append("  |\n");
+            table.append("+-----+-----+-----+\n");
+            table.append("|  ");
+            table.append(getChar(this.table[2][0]));
+            table.append("  |  ");
+            table.append(getChar(this.table[2][1]));
+            table.append("  |  ");
+            table.append(getChar(this.table[2][2]));
+        } catch (CellException e) {
+            e.printStackTrace();
+        }
+        table.append("  |\n");
+        table.append("+-----+-----+-----+\n");
+        return table.toString();
+    }
+
+    public String getChar(CellState cellValue) throws CellException {
+        if (cellValue == null) {
+            throw new CellException("Cell value is null.");
+        }
+        if (cellValue.equals(CellState.TIC)) {
+            return "x";
+        } else if (cellValue.equals(CellState.TAC)) {
+            return "0";
+        } else if (cellValue.equals(CellState.UNSET)) {
+            return " ";
+        } else throw new CellException("Illegal cell state.");
     }
 }
