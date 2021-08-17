@@ -7,65 +7,44 @@ import com.company.table.CellState;
 import com.company.table.Table;
 import com.company.user.User;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class Controller {
     public int numberOfGames;
     public int numberOfWins;
     public int numberOfLosses;
-    private final Table table;
+    public int numberOfDraws;
+    public final Table table;
     private final User user;
     private final Ai ai;
+    public Player currentPlayer;
     public String victory;
     private CellState equalValue;
 
     public Controller() throws IOException {
-        printRules();
-        startGame();
         user = new User();
         ai = new Ai(user.getCharacter());
+        currentPlayer = getCurrentPlayer();
         table = new Table();
         equalValue = CellState.UNSET;
     }
 
-    private void printRules() {
-        System.out.println("\nTIC-TAC-TOE\n\nRules:\nTo win the game, a player must place three of their marks" +
-                " in a horizontal, vertical, or diagonal row. There is no universally-agreed rule as to who plays first,\n" +
-                "but in this game realization the convention that X plays first is used.\n");
-    }
-
-    private void startGame() throws IOException {
-        System.out.println("Start the game?\nEnter [y] - yes or [n] - no.");
-        String answer = enterAnswer();
-        if  (answer.equals("n")) {
-            System.out.println("Thank you for your attention. See you later.");
-            System.exit(0);
-        }
-    }
     /**
      * Проводит игру.
      */
     public void playGame() throws CellException, IOException {
-        do {
-            Player currentPlayer = getCurrentPlayer();
-            System.out.println("Game started.");
+        Player currentPlayer = getCurrentPlayer();
+        while(!gameOver()) {
+            currentPlayer.play(table);
+            System.out.println("Player" + " \"" + currentPlayer.getName() + " \"" + " move № " + table.getNumberOfRecords());
             System.out.println(table);
-            while(!gameOver()) {
-                currentPlayer.play(table);
-                System.out.println("Player" + " \"" + currentPlayer.getName() + " \"" + " move № " + table.getNumberOfRecords());
-                System.out.println(table);
-                currentPlayer = getNextPlayer(currentPlayer);
-            }
-            chooseVictory();
-            numberOfGames++;
-            printVictory();
-            printStatistics();
-        } while (wantToContinue());
+            currentPlayer = getNextPlayer(currentPlayer);
+        }
+        chooseVictory();
+
     }
 
-    private Player getCurrentPlayer() {
+    public Player getCurrentPlayer() {
         Player currentPlayer;
         if (user.getCharacter().equals(CellState.TIC)) {
             currentPlayer = user;
@@ -84,7 +63,7 @@ public class Controller {
     /**
      * Перезапускает игру.
      */
-    public void resetGame() throws CellException, IOException {
+    public void resetGame() {
         table.clear();
         equalValue = CellState.UNSET;
         victory = null;
@@ -93,16 +72,17 @@ public class Controller {
     /**
      * Определяет окончание игры.
      */
-    private boolean gameOver() {
+    public boolean gameOver() {
         if (table.getNumberOfRecords() < 5) {
             return false;
-        }
-
-        if (checkEquals()) {
+        } else if (checkEquals()) {
+            numberOfGames++;
+            return true;
+        } else if (table.getNumberOfRecords() == 9) {
+            numberOfGames++;
             return true;
         }
-
-        return table.getNumberOfRecords() == 9;
+        return false;
     }
 
     private boolean checkEquals() {
@@ -162,54 +142,18 @@ public class Controller {
      */
     private void chooseVictory() {
         if (equalValue.equals(CellState.UNSET)) {
-            victory = "Game ended in a draw.";
+            victory = "draw";
+            numberOfDraws++;
         } else if (user.getCharacter().equals(equalValue)) {
-            victory = "Player" + " \"" + user.getName() + "\"" + " is win.";
+            victory = user.getName();
             numberOfWins++;
         } else if (ai.getCharacter().equals(equalValue)) {
-            victory = "Player" + " \"" + ai.getName() + "\"" + " is win.";
+            victory = ai.getName();
             numberOfLosses++;
         }
     }
 
-    private void printVictory() {
-        System.out.println(victory);
-    }
 
-    private void printStatistics() {
-        System.out.println("Statistics: Wins - " +
-                numberOfWins +
-                "; Losses - " +
-                numberOfLosses +
-                "; Number of games - " +
-                numberOfGames +
-                ".");
-    }
 
-    private boolean wantToContinue() throws IOException, CellException {
-        System.out.println("Continue?\nEnter [y] - yes or [n] - no.");
-        String answer = enterAnswer();
-        if  (answer.equals("y")) {
-            resetGame();
-            return true;
-        } else {
-            System.out.println("Thanks for playing.");
-            return false;
-        }
-    }
 
-    private String enterAnswer() throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String answer = reader.readLine();
-        while (!validateAnswer(answer)) {
-            System.out.println("Illegal answer. Try again.");
-            System.out.println("Enter [y] - yes or [n] - no.");
-            answer = reader.readLine();
-        }
-        return answer;
-    }
-
-    private boolean validateAnswer(String answer) {
-        return answer.equals("y") || answer.equals("n");
-    }
 }
