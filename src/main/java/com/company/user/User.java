@@ -46,7 +46,7 @@ public class User extends Player {
 
     public void setName() throws IOException {
         while (name == null || Objects.equals(name, "")) {
-            System.out.println("Write a nickname.");
+            System.out.println("Enter a nickname.");
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             name = reader.readLine();
         }
@@ -68,14 +68,16 @@ public class User extends Player {
         table.setCell(numberOfString, numberOfColumn, getCharacter());
     }
 
+    //method of table
     private boolean validateCellCoordinates(int numberOfString, int numberOfColumn, Table table) {
         if (numberOfColumn >= 0 && numberOfColumn <= 2 && numberOfString >= 0 && numberOfString <= 2) {
-            return table.getCell(numberOfString, numberOfColumn).equals(CellState.UNSET);
+            if (!table.getCell(numberOfString, numberOfColumn).equals(CellState.UNSET)) {
+                System.out.println("Cell is busy. Choose another.");
+                return false;
+            } else return true;
         } else {
             System.out.println("Cell coordinates is not a valid. Try again.");
             return false;
         }
-
-
     }
 }

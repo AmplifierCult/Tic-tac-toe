@@ -52,6 +52,7 @@ public class Ai extends Player {
         return character;
     }
 
+    //EasyAI
     @Override
     public void play(Table table) throws CellException {
         int numberOfString;
@@ -67,5 +68,18 @@ public class Ai extends Player {
 
     private boolean validateCellCoordinates(int numberOfString, int numberOfColumn, Table table) {
         return table.getCell(numberOfString, numberOfColumn).equals(CellState.UNSET);
+    }
+
+    //HardAI
+    private void playHard(Table table) throws CellException {
+        int numberOfString;
+        int numberOfColumn;
+        do {
+            numberOfString = (int) (Math.random() * 3);
+            numberOfColumn = (int) (Math.random() * 3);
+        }
+        while (!validateCellCoordinates(numberOfString, numberOfColumn, table));
+
+        table.setCell(numberOfString, numberOfColumn, getCharacter());
     }
 }

@@ -9,16 +9,6 @@ public class ConsoleGame {
     public static void main(String[] args) throws CellException, IOException {
 
         Controller controller = new Controller();
-        do {
-            controller.playGame();
-            controller.printVictory();
-            controller.printStatistics();
-
-        } while (controller.wantToContinue());
-
-
-
-        controller.resetGame();
+        controller.playGame();
     }
-
 }

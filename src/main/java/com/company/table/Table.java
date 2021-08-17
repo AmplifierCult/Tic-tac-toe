@@ -61,8 +61,10 @@ public class Table {
     @Override
     public String toString() {
         StringBuilder table = new StringBuilder();
-        table.append("+-----+-----+-----+\n");
-        table.append("|  ");
+        table.append("     C  o  l  u  m  n  s\n");
+        table.append("        1     2     3   \n");
+        table.append("S    +-----+-----+-----+\n");
+        table.append("t  1 |  ");
         try {
             table.append(getChar(this.table[0][0]));
             table.append("  |  ");
@@ -70,16 +72,16 @@ public class Table {
             table.append("  |  ");
             table.append(getChar(this.table[0][2]));
             table.append("  |\n");
-            table.append("+-----+-----+-----+\n");
-            table.append("|  ");
+            table.append("r    +-----+-----+-----+\n");
+            table.append("i  2 |  ");
             table.append(getChar(this.table[1][0]));
             table.append("  |  ");
             table.append(getChar(this.table[1][1]));
             table.append("  |  ");
             table.append(getChar(this.table[1][2]));
             table.append("  |\n");
-            table.append("+-----+-----+-----+\n");
-            table.append("|  ");
+            table.append("n    +-----+-----+-----+\n");
+            table.append("g  3 |  ");
             table.append(getChar(this.table[2][0]));
             table.append("  |  ");
             table.append(getChar(this.table[2][1]));
@@ -89,7 +91,7 @@ public class Table {
             e.printStackTrace();
         }
         table.append("  |\n");
-        table.append("+-----+-----+-----+\n");
+        table.append("s    +-----+-----+-----+\n");
         return table.toString();
     }
 
