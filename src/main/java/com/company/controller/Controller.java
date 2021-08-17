@@ -2,7 +2,6 @@ package com.company.controller;
 
 import com.company.Player;
 import com.company.ai.Ai;
-import com.company.table.CellException;
 import com.company.table.CellState;
 import com.company.table.Table;
 import com.company.user.User;
@@ -15,35 +14,20 @@ public class Controller {
     public int numberOfLosses;
     public int numberOfDraws;
     public final Table table;
-    private final User user;
-    private final Ai ai;
+    public User user;
+    public Ai ai;
     public Player currentPlayer;
     public String victory;
     private CellState equalValue;
 
     public Controller() throws IOException {
-        user = new User();
-        ai = new Ai(user.getCharacter());
-        currentPlayer = getCurrentPlayer();
         table = new Table();
         equalValue = CellState.UNSET;
     }
 
     /**
-     * Проводит игру.
+     * Возвращает текущего игрока.
      */
-    public void playGame() throws CellException, IOException {
-        Player currentPlayer = getCurrentPlayer();
-        while(!gameOver()) {
-            currentPlayer.play(table);
-            System.out.println("Player" + " \"" + currentPlayer.getName() + " \"" + " move № " + table.getNumberOfRecords());
-            System.out.println(table);
-            currentPlayer = getNextPlayer(currentPlayer);
-        }
-        chooseVictory();
-
-    }
-
     public Player getCurrentPlayer() {
         Player currentPlayer;
         if (user.getCharacter().equals(CellState.TIC)) {
@@ -52,7 +36,10 @@ public class Controller {
         return currentPlayer;
     }
 
-    private Player getNextPlayer(Player currentPlayer) {
+    /**
+     * Возвращает следующего игрока.
+     */
+    public Player getNextPlayer() {
         Player nextPlayer;
         if (currentPlayer instanceof User) {
             nextPlayer = ai;
@@ -67,6 +54,7 @@ public class Controller {
         table.clear();
         equalValue = CellState.UNSET;
         victory = null;
+        currentPlayer = getCurrentPlayer();
     }
 
     /**
@@ -85,6 +73,9 @@ public class Controller {
         return false;
     }
 
+    /**
+     * Проверяет наличие совпадений 3-х символов по столбцам, диагоналям и строкам.
+     */
     private boolean checkEquals() {
         // Проверяем первый ряд на совпадения.
         if (table.getCell(0,0).equals(table.getCell(0,1)) && table.getCell(0,0).equals(table.getCell(0,2)) && !table.getCell(0,0).equals(CellState.UNSET)) {
@@ -123,13 +114,13 @@ public class Controller {
         }
 
         // Проверяем второй столбец на совпадения.
-        if (table.getCell(0,1).equals(table.getCell(1,1)) && table.getCell(0,1).equals(table.getCell(2,1)) && !table.getCell(0,0).equals(CellState.UNSET)) {
+        if (table.getCell(0,1).equals(table.getCell(1,1)) && table.getCell(0,1).equals(table.getCell(2,1)) && !table.getCell(0,1).equals(CellState.UNSET)) {
             equalValue = table.getCell(0,1);
             return true;
         }
 
         // Проверяем третий столбец на совпадения.
-        if (table.getCell(0,2).equals(table.getCell(1,2)) && table.getCell(0,2).equals(table.getCell(2,2)) && !table.getCell(0,0).equals(CellState.UNSET)) {
+        if (table.getCell(0,2).equals(table.getCell(1,2)) && table.getCell(0,2).equals(table.getCell(2,2)) && !table.getCell(0,2).equals(CellState.UNSET)) {
             equalValue = table.getCell(0,2);
             return true;
         }
@@ -140,7 +131,7 @@ public class Controller {
     /**
      * Определяет победителя.
      */
-    private void chooseVictory() {
+    public void chooseVictory() {
         if (equalValue.equals(CellState.UNSET)) {
             victory = "draw";
             numberOfDraws++;

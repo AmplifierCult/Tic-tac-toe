@@ -61,13 +61,13 @@ public class Ai extends Player {
             numberOfString = (int) (Math.random() * 3);
             numberOfColumn = (int) (Math.random() * 3);
         }
-        while (!validateCellCoordinates(numberOfString, numberOfColumn, table));
+        while (validateCellCoordinates(numberOfString, numberOfColumn, table));
 
         table.setCell(numberOfString, numberOfColumn, getCharacter());
     }
 
     private boolean validateCellCoordinates(int numberOfString, int numberOfColumn, Table table) {
-        return table.getCell(numberOfString, numberOfColumn).equals(CellState.UNSET);
+        return !table.getCell(numberOfString, numberOfColumn).equals(CellState.UNSET);
     }
 
     //HardAI
@@ -78,7 +78,7 @@ public class Ai extends Player {
             numberOfString = (int) (Math.random() * 3);
             numberOfColumn = (int) (Math.random() * 3);
         }
-        while (!validateCellCoordinates(numberOfString, numberOfColumn, table));
+        while (validateCellCoordinates(numberOfString, numberOfColumn, table));
 
         table.setCell(numberOfString, numberOfColumn, getCharacter());
     }

@@ -6,6 +6,7 @@ import com.company.table.CellException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Objects;
 
 public class ConsoleGame {
     public static void main(String[] args) throws CellException, IOException {
@@ -22,15 +23,30 @@ public class ConsoleGame {
             System.out.println("Thank you for your attention. See you later.");
             System.exit(0);
         }
-
         Controller controller = new Controller();
+
+        //Create User
+        System.out.println("Enter a nickname.");
+        controller.user.setName(enterName());
+        System.out.println("Choose a character [x] or [0] and write him.");
+        controller.user.setCharacter(enterCharacter());
+
+
+        //Create AI
+        controller.ai.setName();
+        controller.ai.setCharacter(controller.user.character);
+        //Play game
+        controller.currentPlayer = controller.getCurrentPlayer();
         do {
             System.out.println("Game started.");
             System.out.println(controller.table);
             while (!controller.gameOver()) {
                 controller.currentPlayer.play(controller.table);
                 System.out.println("Player" + " \"" + controller.currentPlayer.getName() + " \"" + " move № " + controller.table.getNumberOfRecords());
+                System.out.println(controller.table);
+                controller.currentPlayer = controller.getNextPlayer();
             }
+            controller.chooseVictory();
             printVictory(controller);
             printStatistics(controller);
         } while (wantToContinue(controller));
@@ -81,5 +97,34 @@ public class ConsoleGame {
 
     private static boolean validateAnswer(String answer) {
         return answer.equals("y") || answer.equals("n");
+    }
+
+    private static String enterName() throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String name = reader.readLine();
+        while (validateName(name)) {
+            System.out.println("Illegal nickname. Try again.");
+            System.out.println("Enter a nickname.");
+            name = reader.readLine();
+        }
+        return name;
+    }
+
+    private static boolean validateName(String name) {
+        return name == null || Objects.equals(name, "");
+    }
+
+    private static String enterCharacter() throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String character = reader.readLine();
+        while (validateCharacter(character)) {
+            System.out.println("Illegal name of character.");
+            System.out.println("Choose a character [x] or [0] and write him.");
+            character = reader.readLine();
+        }
+        return character;
+    }
+    private static boolean validateCharacter(String characterName) {
+        return characterName.equals("x") || characterName.equals("X") || characterName.equals("0");
     }
 }
