@@ -95,10 +95,10 @@ public class Controller {
         if (table.getNumberOfRecords() < 5) {
             return false;
         } else if (checkEquals()) {
-            statistics.setNumberOfGames();
+            statistics.incrementNumberOfGames();
             return true;
         } else if (table.getNumberOfRecords() == 9) {
-            statistics.setNumberOfGames();
+            statistics.incrementNumberOfGames();
             return true;
         }
         return false;
@@ -164,14 +164,14 @@ public class Controller {
      */
     public void chooseVictory() {
         if (equalValue.equals(CellState.UNSET)) {
-            setVictory("draw");
-            statistics.setNumberOfDraws();
+            victory = "draw";
+            statistics.incrementNumberOfDraws();
         } else if (user.getCharacter().equals(equalValue)) {
-            setVictory(user.getName());
-            statistics.setNumberOfWins();
+            victory = user.getName();
+            statistics.incrementNumberOfWins();
         } else if (ai.getCharacter().equals(equalValue)) {
-            setVictory(ai.getName());
-            statistics.setNumberOfLosses();
+            victory = ai.getName();
+            statistics.incrementNumberOfLosses();
         }
     }
 }

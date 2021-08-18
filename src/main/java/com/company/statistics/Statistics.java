@@ -10,7 +10,7 @@ public class Statistics {
         return numberOfGames;
     }
 
-    public void setNumberOfGames() {
+    public void incrementNumberOfGames() {
         numberOfGames++;
     }
 
@@ -18,7 +18,7 @@ public class Statistics {
         return numberOfWins;
     }
 
-    public void setNumberOfWins() {
+    public void incrementNumberOfWins() {
         numberOfWins++;
     }
 
@@ -26,7 +26,7 @@ public class Statistics {
         return numberOfLosses;
     }
 
-    public void setNumberOfLosses() {
+    public void incrementNumberOfLosses() {
         numberOfLosses++;
     }
 
@@ -34,7 +34,7 @@ public class Statistics {
         return numberOfDraws;
     }
 
-    public void setNumberOfDraws() {
+    public void incrementNumberOfDraws() {
         numberOfDraws++;
     }
 }
