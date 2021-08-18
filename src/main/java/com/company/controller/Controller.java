@@ -21,6 +21,8 @@ public class Controller {
     private CellState equalValue;
 
     public Controller() throws IOException {
+        user = new User();
+        ai = new Ai();
         table = new Table();
         equalValue = CellState.UNSET;
     }

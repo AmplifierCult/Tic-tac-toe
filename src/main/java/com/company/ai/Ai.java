@@ -10,11 +10,6 @@ import java.io.IOException;
 
 public class Ai extends Player {
 
-    public Ai(CellState character) throws IOException {
-        setName();
-        setCharacter(character);
-    }
-
     public void setName() throws IOException {
         System.out.println("Choose the difficulty of artificial intelligence (AI):\n[1] EasyAI\n[2] NormalAI\n[3] HardAI");
         System.out.print("Enter the number of AI ");

@@ -84,10 +84,21 @@ public class ConsoleGame {
         }
     }
 
+    //TODO universal text input method
+    private static String enterText(String helpMessage /*validationMethod*/) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String text = reader.readLine();
+        /*while (validationMethod(text)) {
+            System.out.println(helpMessage);
+            text = reader.readLine();
+        }*/
+        return text;
+    }
+
     private static String enterAnswer() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String answer = reader.readLine();
-        while (!validateAnswer(answer)) {
+        while (validateAnswer(answer)) {
             System.out.println("Illegal answer. Try again.");
             System.out.println("Enter [y] - yes or [n] - no.");
             answer = reader.readLine();
@@ -96,7 +107,7 @@ public class ConsoleGame {
     }
 
     private static boolean validateAnswer(String answer) {
-        return answer.equals("y") || answer.equals("n");
+        return !answer.equals("y") && !answer.equals("n");
     }
 
     private static String enterName() throws IOException {
@@ -117,7 +128,7 @@ public class ConsoleGame {
     private static String enterCharacter() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String character = reader.readLine();
-        while (validateCharacter(character)) {
+        while (!validateCharacter(character)) {
             System.out.println("Illegal name of character.");
             System.out.println("Choose a character [x] or [0] and write him.");
             character = reader.readLine();
