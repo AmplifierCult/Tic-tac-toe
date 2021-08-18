@@ -27,24 +27,24 @@ public class ConsoleGame {
 
         //Create User
         System.out.println("Enter a nickname.");
-        controller.user.setName(enterName());
+        controller.getUser().setName(enterName());
         System.out.println("Choose a character [x] or [0] and write him.");
-        controller.user.setCharacter(enterCharacter());
+        controller.getUser().setCharacter(enterCharacter());
 
 
         //Create AI
-        controller.ai.setName();
-        controller.ai.setCharacter(controller.user.character);
+        controller.getAi().setName();
+        controller.getAi().setCharacter(controller.getUser().character);
         //Play game
-        controller.currentPlayer = controller.getCurrentPlayer();
+        controller.setCurrentPlayer(controller.getFirstPlayer());
         do {
             System.out.println("Game started.");
-            System.out.println(controller.table);
+            System.out.println(controller.getTable());
             while (!controller.gameOver()) {
-                controller.currentPlayer.play(controller.table);
-                System.out.println("Player" + " \"" + controller.currentPlayer.getName() + " \"" + " move № " + controller.table.getNumberOfRecords());
-                System.out.println(controller.table);
-                controller.currentPlayer = controller.getNextPlayer();
+                controller.getCurrentPlayer().play(controller.getTable());
+                System.out.println("Player" + " \"" + controller.getCurrentPlayer().getName() + " \"" + " move № " + controller.getTable().getNumberOfRecords());
+                System.out.println(controller.getTable());
+                controller.setCurrentPlayer(controller.getNextPlayer());
             }
             controller.chooseVictory();
             printVictory(controller);
@@ -53,22 +53,22 @@ public class ConsoleGame {
     }
 
     private static void printVictory(Controller controller) {
-        if (controller.victory.equals("draw")) {
+        if (controller.getVictory().equals("draw")) {
             System.out.println("Game ended in a draw.");
         } else {
-            System.out.println("Player" + " \"" + controller.victory + "\"" + " is win.");
+            System.out.println("Player" + " \"" + controller.getVictory() + "\"" + " is win.");
         }
     }
 
     private static void printStatistics(Controller controller) {
         System.out.println("Statistics: Wins - " +
-                controller.statistics.getNumberOfWins() +
+                controller.getStatistics().getNumberOfWins() +
                 "; Losses - " +
-                controller.statistics.getNumberOfLosses() +
+                controller.getStatistics().getNumberOfLosses() +
                 "; Draws - " +
-                controller.statistics.getNumberOfDraws() +
+                controller.getStatistics().getNumberOfDraws() +
                 "; Number of games - " +
-                controller.statistics.getNumberOfGames() +
+                controller.getStatistics().getNumberOfGames() +
                 ".");
     }
 
