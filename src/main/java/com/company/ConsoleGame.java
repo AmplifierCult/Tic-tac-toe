@@ -62,13 +62,13 @@ public class ConsoleGame {
 
     private static void printStatistics(Controller controller) {
         System.out.println("Statistics: Wins - " +
-                controller.numberOfWins +
+                controller.statistics.getNumberOfWins() +
                 "; Losses - " +
-                controller.numberOfLosses +
+                controller.statistics.getNumberOfLosses() +
                 "; Draws - " +
-                controller.numberOfDraws +
+                controller.statistics.getNumberOfDraws() +
                 "; Number of games - " +
-                controller.numberOfGames +
+                controller.statistics.getNumberOfGames() +
                 ".");
     }
 
