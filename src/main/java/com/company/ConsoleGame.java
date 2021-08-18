@@ -2,6 +2,7 @@ package com.company;
 
 import com.company.controller.Controller;
 import com.company.table.CellException;
+import com.company.table.TableConsolePrinter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,11 +40,11 @@ public class ConsoleGame {
         controller.currentPlayer = controller.getCurrentPlayer();
         do {
             System.out.println("Game started.");
-            System.out.println(controller.table);
+            TableConsolePrinter.printTable(controller.table);
             while (!controller.gameOver()) {
                 controller.currentPlayer.play(controller.table);
                 System.out.println("Player" + " \"" + controller.currentPlayer.getName() + " \"" + " move № " + controller.table.getNumberOfRecords());
-                System.out.println(controller.table);
+                TableConsolePrinter.printTable(controller.table);
                 controller.currentPlayer = controller.getNextPlayer();
             }
             controller.chooseVictory();
