@@ -49,7 +49,7 @@ public class Ai extends Player {
 
     //EasyAI
     @Override
-    public void play(Table table) throws CellException {
+    public void play(Table table) throws IOException, CellException {
         int numberOfString;
         int numberOfColumn;
         do {

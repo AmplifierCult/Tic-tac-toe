@@ -8,12 +8,12 @@ import com.company.table.Table;
 import com.company.user.User;
 
 public class Controller {
-    public final Table table;
-    public User user;
-    public Ai ai;
-    public Statistics statistics;
-    public Player currentPlayer;
-    public String victory;
+    private final Table table;
+    private final User user;
+    private final Ai ai;
+    private final Statistics statistics;
+    private Player currentPlayer;
+    private String victory;
     private CellState equalValue;
 
     public Controller() {
@@ -24,10 +24,42 @@ public class Controller {
         equalValue = CellState.UNSET;
     }
 
-    /**
-     * Возвращает текущего игрока.
-     */
+    public Table getTable() {
+        return table;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Ai getAi() {
+        return ai;
+    }
+
+    public Statistics getStatistics() {
+        return statistics;
+    }
+
+    public String getVictory() {
+        return victory;
+    }
+
+    public void setVictory(String victory) {
+        this.victory = victory;
+    }
+
     public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    /**
+     * Возвращает игрока который должен ходить первым.
+     */
+    public Player getFirstPlayer() {
         Player currentPlayer;
         if (user.getCharacter().equals(CellState.TIC)) {
             currentPlayer = user;
@@ -53,7 +85,7 @@ public class Controller {
         table.clear();
         equalValue = CellState.UNSET;
         victory = null;
-        currentPlayer = getCurrentPlayer();
+        currentPlayer = getFirstPlayer();
     }
 
     /**
