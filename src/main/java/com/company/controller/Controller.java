@@ -2,28 +2,25 @@ package com.company.controller;
 
 import com.company.Player;
 import com.company.ai.Ai;
+import com.company.statistics.Statistics;
 import com.company.table.CellState;
 import com.company.table.Table;
 import com.company.user.User;
 
-import java.io.IOException;
-
 public class Controller {
-    public int numberOfGames;
-    public int numberOfWins;
-    public int numberOfLosses;
-    public int numberOfDraws;
     public final Table table;
     public User user;
     public Ai ai;
+    public Statistics statistics;
     public Player currentPlayer;
     public String victory;
     private CellState equalValue;
 
-    public Controller() throws IOException {
+    public Controller() {
         user = new User();
         ai = new Ai();
         table = new Table();
+        statistics = new Statistics();
         equalValue = CellState.UNSET;
     }
 
@@ -66,10 +63,10 @@ public class Controller {
         if (table.getNumberOfRecords() < 5) {
             return false;
         } else if (checkEquals()) {
-            numberOfGames++;
+            statistics.setNumberOfGames();
             return true;
         } else if (table.getNumberOfRecords() == 9) {
-            numberOfGames++;
+            statistics.setNumberOfGames();
             return true;
         }
         return false;
@@ -136,17 +133,13 @@ public class Controller {
     public void chooseVictory() {
         if (equalValue.equals(CellState.UNSET)) {
             victory = "draw";
-            numberOfDraws++;
+            statistics.setNumberOfDraws();
         } else if (user.getCharacter().equals(equalValue)) {
             victory = user.getName();
-            numberOfWins++;
+            statistics.setNumberOfWins();
         } else if (ai.getCharacter().equals(equalValue)) {
             victory = ai.getName();
-            numberOfLosses++;
+            statistics.setNumberOfLosses();
         }
     }
-
-
-
-
 }
