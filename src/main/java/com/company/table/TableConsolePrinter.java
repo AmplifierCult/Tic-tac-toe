@@ -41,12 +41,12 @@ public class TableConsolePrinter {
         if (cellValue == null) {
             throw new CellException("Cell value is null.");
         }
-        if (cellValue.equals(CellState.TIC)) {
-            return "x";
-        } else if (cellValue.equals(CellState.TAC)) {
-            return "0";
-        } else if (cellValue.equals(CellState.UNSET)) {
-            return " ";
-        } else throw new CellException("Illegal cell state.");
+
+        switch (cellValue) {
+            case UNSET: return " ";
+            case TIC: return "x";
+            case TAC: return "0";
+            default: throw new CellException("Illegal cell state.");
+        }
     }
 }
