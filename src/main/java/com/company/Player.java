@@ -14,6 +14,16 @@ public abstract class Player {
     public abstract void play(Table table) throws IOException, CellException;
     public abstract String getName();
 
+    public CellState getCharacter() {
+        return character;
+    }
+
+    public void setInvertCharacter(CellState character) {
+        if (character.equals(CellState.TAC)) {
+            this.character = CellState.TIC;
+        } else this.character = CellState.TAC;
+    }
+
     protected String enterNumber() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String number = reader.readLine();

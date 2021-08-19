@@ -1,8 +1,10 @@
 package com.company;
 
+import com.company.ai.Ai;
 import com.company.controller.Controller;
 import com.company.table.CellException;
 import com.company.table.TableConsolePrinter;
+import com.company.user.User;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,18 +28,20 @@ public class ConsoleGame {
         }
         Controller controller = new Controller();
 
-        //Create User
-        System.out.println("Enter a nickname.");
-        controller.getUser().setName(enterName());
-        System.out.println("Choose a character [x] or [0] and write him.");
-        controller.getUser().setCharacter(enterCharacter());
+        //Create first player
+        System.out.println("Select first player:");
+        controller.createFirstPlayer(selectPlayer());
+        Player firstPlayer = controller.getFirstPlayer();
+        initialize(firstPlayer);
 
+        //Create second player
+        System.out.println("Select second player:");
+        controller.createSecondPlayer(selectPlayer());
+        Player secondPlayer = controller.getSecondPlayer();
+        initialize(secondPlayer);
 
-        //Create AI
-        controller.getAi().setName();
-        controller.getAi().setCharacter(controller.getUser().character);
         //Play game
-        controller.setCurrentPlayer(controller.getFirstPlayer());
+        controller.setCurrentPlayer(controller.getPlayerGoFirst());
         do {
             System.out.println("Game started.");
             TableConsolePrinter.printTable(controller.getTable());
@@ -136,7 +140,66 @@ public class ConsoleGame {
         }
         return character;
     }
+
     private static boolean validateCharacter(String characterName) {
         return characterName.equals("x") || characterName.equals("X") || characterName.equals("0");
+    }
+
+    private static ListOfPlayers selectPlayer() throws IOException {
+        System.out.println("[1] User");
+        System.out.println("[2] EasyAI");
+        System.out.println("[3] NormalAI");
+        System.out.println("[4] HardAI");
+        System.out.print("Enter the number ");
+        switch (enterNumber()) {
+            case "1":
+                return ListOfPlayers.USER;
+            case "2":
+                return ListOfPlayers.EASY_AI;
+            case "3":
+                return ListOfPlayers.NORMAL_AI;
+            case "4":
+                return ListOfPlayers.HARD_AI;
+            default:
+                System.out.println("Illegal number. Try again.");
+                return selectPlayer();
+        }
+    }
+
+    private static String enterNumber() throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String number = reader.readLine();
+        while (!validateNumber(number)) {
+            number = reader.readLine();
+        }
+        return number;
+    }
+
+    private static boolean validateNumber(String number) {
+        if (number.equals("")) {
+            System.out.println("Illegal number. Try again.");
+            return false;
+        }
+        try {
+            Integer.parseInt(number);
+        } catch (NumberFormatException e) {
+            System.out.println("Illegal number. Try again.");
+            return false;
+        }
+        return true;
+    }
+
+    private static void initialize(Player player) throws IOException {
+        if (player instanceof User) {
+            System.out.println("Enter a nickname.");
+            ((User) player).setName(enterName());
+            if (player.getCharacter() == null) {
+                System.out.println("Choose a character [x] or [0] and write him.");
+                ((User) player).setCharacter(enterCharacter());
+            }
+        } else if (player instanceof Ai) {
+            System.out.println("Choose a character [x] or [0] and write him.");
+            ((Ai) player).setCharacter(enterCharacter());
+        }
     }
 }

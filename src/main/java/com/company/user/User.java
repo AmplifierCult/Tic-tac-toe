@@ -9,11 +9,7 @@ import java.io.IOException;
 
 public class User extends Player {
 
-    public CellState getCharacter() {
-        return character;
-    }
-
-    public void setCharacter(String character) throws IOException {
+    public void setCharacter(String character) {
         if (character.equals("0")) {
             this.character = CellState.TAC;
         } else this.character = CellState.TIC;
@@ -24,7 +20,7 @@ public class User extends Player {
         return name;
     }
 
-    public void setName(String name) throws IOException {
+    public void setName(String name) {
         this.name = name;
     }
 
