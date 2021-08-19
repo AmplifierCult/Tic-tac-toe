@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 public class ConsoleGame {
     public static void main(String[] args) throws CellException, IOException {
@@ -22,7 +23,7 @@ public class ConsoleGame {
 
         //Start game
         System.out.println("Start the game?\nEnter [y] - yes or [n] - no.");
-        String answer = enterAnswer();
+        String answer = enterText(HelpMessageType.CONTINUE_THE_GAME);
         if  (answer.equals("n")) {
             System.out.println("Thank you for your attention. See you later.");
             System.exit(0);
@@ -78,7 +79,7 @@ public class ConsoleGame {
 
     private static boolean wantToContinue(Controller controller) throws IOException {
         System.out.println("Continue?\nEnter [y] - yes or [n] - no.");
-        String answer = enterAnswer();
+        String answer = enterText(HelpMessageType.CONTINUE_THE_GAME);
         if  (answer.equals("y")) {
             controller.resetGame();
             return true;
@@ -88,15 +89,30 @@ public class ConsoleGame {
         }
     }
 
-    //TODO universal text input method
-    private static String enterText(String helpMessage /*validationMethod*/) throws IOException {
+    private static String enterText(HelpMessageType helpMessage) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String text = reader.readLine();
-        /*while (validationMethod(text)) {
+        Predicate<String> validation = getValidation(helpMessage);
+        while (!validation.test(text)) {
             System.out.println(helpMessage);
             text = reader.readLine();
-        }*/
+        }
         return text;
+    }
+
+    private static Predicate<String> getValidation(HelpMessageType helpMessage) {
+        switch (helpMessage) {
+            case ENTER_NAME:
+                return name -> name == null || !Objects.equals(name, "");
+            case ENTER_NUMBER:
+                return number -> number.equals("1") || number.equals("2") || number.equals("3") || number.equals("4") || number.equals("5");
+            case ENTER_CHARACTER:
+                return character -> character.equals("x") || character.equals("X") || character.equals("0");
+            case CONTINUE_THE_GAME:
+                return answer -> answer.equals("y") || answer.equals("n");
+            default:
+                throw new IllegalArgumentException("Illegal help message.");
+        }
     }
 
     private static String enterAnswer() throws IOException {
@@ -137,7 +153,7 @@ public class ConsoleGame {
         return characterName.equals("x") || characterName.equals("X") || characterName.equals("0");
     }
 
-    private static Player initializePlayer(Player previousPlayer) {
+    private static Player initializePlayer(Player previousPlayer) throws IOException {
         PlayerType playerType = selectPlayerType();
 
         String playerName = inputPlayerName(playerType);
@@ -152,12 +168,11 @@ public class ConsoleGame {
         return Player.createPlayer(playerType, playerName, playerCharacter);
     }
 
-    private static String inputPlayerName(PlayerType playerType) {
-        String name;
+    private static String inputPlayerName(PlayerType playerType) throws IOException {
         switch (playerType) {
             case USER:
                 System.out.println("Enter a nickname: ");
-                return enterName();
+                return enterText(HelpMessageType.ENTER_NAME);
             case EASY_AI:
                 System.out.println("You select AI for gaming. The name will be their difficulty.");
                 return "EasyAI";
@@ -172,9 +187,9 @@ public class ConsoleGame {
         }
     }
 
-    private static CellState inputPlayerCharacter() {
+    private static CellState inputPlayerCharacter() throws IOException {
         System.out.println("Choose a character [x] or [0] and write him.");
-        String character = enterCharacter();
+        String character = enterText(HelpMessageType.ENTER_CHARACTER);
         if (character.equals("0")) {
             return CellState.TAC;
         } else {
@@ -197,13 +212,13 @@ public class ConsoleGame {
         }
     }
 
-    private static PlayerType selectPlayerType() {
+    private static PlayerType selectPlayerType() throws IOException {
         System.out.println("[1] User");
         System.out.println("[2] EasyAI");
         System.out.println("[3] NormalAI");
         System.out.println("[4] HardAI");
         System.out.print("Enter the number ");
-        switch (enterNumber()) {
+        switch (enterText(HelpMessageType.ENTER_NUMBER)) {
             case "1":
                 return PlayerType.USER;
             case "2":
