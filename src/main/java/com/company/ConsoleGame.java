@@ -1,7 +1,10 @@
 package com.company;
 
 import com.company.controller.Controller;
+import com.company.player.Player;
+import com.company.player.PlayerType;
 import com.company.table.CellException;
+import com.company.table.CellState;
 import com.company.table.TableConsolePrinter;
 
 import java.io.BufferedReader;
@@ -26,18 +29,18 @@ public class ConsoleGame {
         }
         Controller controller = new Controller();
 
-        //Create User
-        System.out.println("Enter a nickname.");
-        controller.getUser().setName(enterName());
-        System.out.println("Choose a character [x] or [0] and write him.");
-        controller.getUser().setCharacter(enterCharacter());
+        //Create first player
+        System.out.println("Select first player:");
+        Player firstPlayer = initializePlayer(null);
+        controller.setFirstPlayer(firstPlayer);
 
+        //Create second player
+        System.out.println("Select second player:");
+        Player secondPlayer = initializePlayer(firstPlayer);
+        controller.setSecondPlayer(secondPlayer);
 
-        //Create AI
-        controller.getAi().setName();
-        controller.getAi().setCharacter(controller.getUser().character);
         //Play game
-        controller.setCurrentPlayer(controller.getFirstPlayer());
+        controller.setCurrentPlayer(controller.getPlayerGoFirst());
         do {
             System.out.println("Game started.");
             TableConsolePrinter.printTable(controller.getTable());
@@ -111,32 +114,134 @@ public class ConsoleGame {
         return !answer.equals("y") && !answer.equals("n");
     }
 
-    private static String enterName() throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String name = reader.readLine();
-        while (validateName(name)) {
-            System.out.println("Illegal nickname. Try again.");
-            System.out.println("Enter a nickname.");
-            name = reader.readLine();
+    private static String enterName() {
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            String name = reader.readLine();
+            while (validateName(name)) {
+                System.out.println("Illegal nickname. Try again.");
+                System.out.println("Enter a nickname.");
+                name = reader.readLine();
+            }
+            return name;
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
         }
-        return name;
     }
 
     private static boolean validateName(String name) {
         return name == null || Objects.equals(name, "");
     }
 
-    private static String enterCharacter() throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String character = reader.readLine();
-        while (!validateCharacter(character)) {
-            System.out.println("Illegal name of character.");
-            System.out.println("Choose a character [x] or [0] and write him.");
-            character = reader.readLine();
-        }
-        return character;
-    }
     private static boolean validateCharacter(String characterName) {
         return characterName.equals("x") || characterName.equals("X") || characterName.equals("0");
+    }
+
+    private static Player initializePlayer(Player previousPlayer) {
+        PlayerType playerType = selectPlayerType();
+
+        String playerName = inputPlayerName(playerType);
+
+        CellState playerCharacter;
+        if (previousPlayer != null) {
+            playerCharacter = previousPlayer.getCharacter().inverse();
+        } else {
+            playerCharacter = inputPlayerCharacter();
+        }
+
+        return Player.createPlayer(playerType, playerName, playerCharacter);
+    }
+
+    private static String inputPlayerName(PlayerType playerType) {
+        String name;
+        switch (playerType) {
+            case USER:
+                System.out.println("Enter a nickname: ");
+                return enterName();
+            case EASY_AI:
+                System.out.println("You select AI for gaming. The name will be their difficulty.");
+                return "EasyAI";
+            case NORMAL_AI:
+                System.out.println("You select AI for gaming. The name will be their difficulty.");
+                return "NormalAI";
+            case HARD_AI:
+                System.out.println("You select AI for gaming. The name will be their difficulty.");
+                return "HardAI";
+            default:
+                throw new IllegalArgumentException("Unknown player type");
+        }
+    }
+
+    private static CellState inputPlayerCharacter() {
+        System.out.println("Choose a character [x] or [0] and write him.");
+        String character = enterCharacter();
+        if (character.equals("0")) {
+            return CellState.TAC;
+        } else {
+            return CellState.TIC;
+        }
+    }
+
+    private static String enterCharacter() {
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            String character = reader.readLine();
+            while (!validateCharacter(character)) {
+                System.out.println("Illegal name of character.");
+                System.out.println("Choose a character [x] or [0] and write him.");
+                character = reader.readLine();
+            }
+            return character;
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    private static PlayerType selectPlayerType() {
+        System.out.println("[1] User");
+        System.out.println("[2] EasyAI");
+        System.out.println("[3] NormalAI");
+        System.out.println("[4] HardAI");
+        System.out.print("Enter the number ");
+        switch (enterNumber()) {
+            case "1":
+                return PlayerType.USER;
+            case "2":
+                return PlayerType.EASY_AI;
+            case "3":
+                return PlayerType.NORMAL_AI;
+            case "4":
+                return PlayerType.HARD_AI;
+            default:
+                System.out.println("Illegal number. Try again.");
+                return selectPlayerType();
+        }
+    }
+
+    private static String enterNumber() {
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            String number = reader.readLine();
+            while (!validateNumber(number)) {
+                number = reader.readLine();
+            }
+            return number;
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    private static boolean validateNumber(String number) {
+        if (number.equals("")) {
+            System.out.println("Illegal number. Try again.");
+            return false;
+        }
+        try {
+            Integer.parseInt(number);
+        } catch (NumberFormatException e) {
+            System.out.println("Illegal number. Try again.");
+            return false;
+        }
+        return true;
     }
 }

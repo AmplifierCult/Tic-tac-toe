@@ -1,6 +1,5 @@
-package com.company.user;
+package com.company.player;
 
-import com.company.Player;
 import com.company.table.CellException;
 import com.company.table.CellState;
 import com.company.table.Table;
@@ -9,23 +8,9 @@ import java.io.IOException;
 
 public class User extends Player {
 
-    public CellState getCharacter() {
-        return character;
-    }
-
-    public void setCharacter(String character) throws IOException {
-        if (character.equals("0")) {
-            this.character = CellState.TAC;
-        } else this.character = CellState.TIC;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) throws IOException {
+    public User(String name, CellState character) {
         this.name = name;
+        this.character = character;
     }
 
     @Override

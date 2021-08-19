@@ -28,6 +28,13 @@ public class Table {
     }
 
     /**
+     * Проверка ячейки на пустоту.
+     */
+    public boolean isEmptyCell(int index1, int index2) {
+        return table[index1][index2].equals(CellState.UNSET);
+    }
+
+    /**
      * Возвращает количество заполненных ячеек.
      */
     public int getNumberOfRecords() {

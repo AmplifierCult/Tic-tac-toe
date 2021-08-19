@@ -1,24 +1,20 @@
 package com.company.controller;
 
-import com.company.Player;
-import com.company.ai.Ai;
+import com.company.player.Player;
 import com.company.statistics.Statistics;
 import com.company.table.CellState;
 import com.company.table.Table;
-import com.company.user.User;
 
 public class Controller {
     private final Table table;
-    private final User user;
-    private final Ai ai;
+    private Player firstPlayer;
+    private Player secondPlayer;
     private final Statistics statistics;
     private Player currentPlayer;
     private String victory;
     private CellState equalValue;
 
     public Controller() {
-        user = new User();
-        ai = new Ai();
         table = new Table();
         statistics = new Statistics();
         equalValue = CellState.UNSET;
@@ -28,12 +24,20 @@ public class Controller {
         return table;
     }
 
-    public User getUser() {
-        return user;
+    public Player getFirstPlayer() {
+        return firstPlayer;
     }
 
-    public Ai getAi() {
-        return ai;
+    public void setFirstPlayer(Player firstPlayer) {
+        this.firstPlayer = firstPlayer;
+    }
+
+    public Player getSecondPlayer() {
+        return secondPlayer;
+    }
+
+    public void setSecondPlayer(Player secondPlayer) {
+        this.secondPlayer = secondPlayer;
     }
 
     public Statistics getStatistics() {
@@ -59,11 +63,11 @@ public class Controller {
     /**
      * Возвращает игрока который должен ходить первым.
      */
-    public Player getFirstPlayer() {
+    public Player getPlayerGoFirst() {
         Player currentPlayer;
-        if (user.getCharacter().equals(CellState.TIC)) {
-            currentPlayer = user;
-        } else currentPlayer = ai;
+        if (firstPlayer.getCharacter().equals(CellState.TIC)) {
+            currentPlayer = firstPlayer;
+        } else currentPlayer = secondPlayer;
         return currentPlayer;
     }
 
@@ -72,9 +76,9 @@ public class Controller {
      */
     public Player getNextPlayer() {
         Player nextPlayer;
-        if (currentPlayer instanceof User) {
-            nextPlayer = ai;
-        } else nextPlayer = user;
+        if (currentPlayer.equals(firstPlayer)) {
+            nextPlayer = secondPlayer;
+        } else nextPlayer = firstPlayer;
         return nextPlayer;
     }
 
@@ -166,11 +170,11 @@ public class Controller {
         if (equalValue.equals(CellState.UNSET)) {
             victory = "draw";
             statistics.incrementNumberOfDraws();
-        } else if (user.getCharacter().equals(equalValue)) {
-            victory = user.getName();
+        } else if (firstPlayer.getCharacter().equals(equalValue)) {
+            victory = firstPlayer.getName();
             statistics.incrementNumberOfWins();
-        } else if (ai.getCharacter().equals(equalValue)) {
-            victory = ai.getName();
+        } else if (secondPlayer.getCharacter().equals(equalValue)) {
+            victory = secondPlayer.getName();
             statistics.incrementNumberOfLosses();
         }
     }
