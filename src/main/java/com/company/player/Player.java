@@ -1,4 +1,4 @@
-package com.company;
+package com.company.player;
 
 import com.company.table.CellException;
 import com.company.table.CellState;
@@ -12,16 +12,13 @@ public abstract class Player {
     protected String name;
     protected CellState character;
     public abstract void play(Table table) throws IOException, CellException;
-    public abstract String getName();
+
+    public String getName() {
+        return name;
+    }
 
     public CellState getCharacter() {
         return character;
-    }
-
-    public void setInvertCharacter(CellState character) {
-        if (character.equals(CellState.TAC)) {
-            this.character = CellState.TIC;
-        } else this.character = CellState.TAC;
     }
 
     protected String enterNumber() throws IOException {
@@ -45,5 +42,18 @@ public abstract class Player {
             return false;
         }
         return true;
+    }
+
+    public static Player createPlayer(PlayerType playerType, String name, CellState character) {
+        switch (playerType) {
+            case USER:
+                return new User(name, character);
+            case EASY_AI:
+            case NORMAL_AI:
+            case HARD_AI:
+                return new Ai(playerType, name, character);
+            default:
+                throw new IllegalArgumentException("Unknown player type");
+        }
     }
 }

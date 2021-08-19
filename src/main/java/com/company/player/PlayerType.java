@@ -1,6 +1,6 @@
-package com.company;
+package com.company.player;
 
-public enum ListOfPlayers {
+public enum PlayerType {
     USER,
     EASY_AI,
     NORMAL_AI,

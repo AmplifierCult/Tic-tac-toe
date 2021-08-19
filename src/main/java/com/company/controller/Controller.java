@@ -1,12 +1,9 @@
 package com.company.controller;
 
-import com.company.ListOfPlayers;
-import com.company.Player;
-import com.company.ai.Ai;
+import com.company.player.Player;
 import com.company.statistics.Statistics;
 import com.company.table.CellState;
 import com.company.table.Table;
-import com.company.user.User;
 
 public class Controller {
     private final Table table;
@@ -27,21 +24,20 @@ public class Controller {
         return table;
     }
 
-    public void createFirstPlayer(ListOfPlayers firstPlayer) {
-        this.firstPlayer = createPlayer(firstPlayer);
-    }
-
     public Player getFirstPlayer() {
         return firstPlayer;
     }
 
-    public void createSecondPlayer(ListOfPlayers secondPlayer) {
-        this.secondPlayer = createPlayer(secondPlayer);
-        this.secondPlayer.setInvertCharacter(firstPlayer.getCharacter());
+    public void setFirstPlayer(Player firstPlayer) {
+        this.firstPlayer = firstPlayer;
     }
 
     public Player getSecondPlayer() {
         return secondPlayer;
+    }
+
+    public void setSecondPlayer(Player secondPlayer) {
+        this.secondPlayer = secondPlayer;
     }
 
     public Statistics getStatistics() {
@@ -64,20 +60,6 @@ public class Controller {
         this.currentPlayer = currentPlayer;
     }
 
-    private Player createPlayer(ListOfPlayers player) {
-        switch (player) {
-            case USER:
-                return new User();
-            case NORMAL_AI:
-                return new Ai(ListOfPlayers.NORMAL_AI);
-            case EASY_AI:
-                return new Ai(ListOfPlayers.EASY_AI);
-            case HARD_AI:
-                return new Ai(ListOfPlayers.HARD_AI);
-            default:
-                throw new IllegalArgumentException();
-        }
-    }
     /**
      * Возвращает игрока который должен ходить первым.
      */
