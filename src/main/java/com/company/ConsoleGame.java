@@ -10,10 +10,8 @@ import com.company.table.TableConsolePrinter;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Objects;
-import java.util.function.Predicate;
 
-public class ConsoleGame {
+public class ConsoleGame implements Validator {
     public static void main(String[] args) throws CellException, IOException {
 
         //Print game title
@@ -23,8 +21,7 @@ public class ConsoleGame {
         HelpMessageType.RULES.printMessage();
 
         //Start game
-        HelpMessageType.START_GAME.printMessage();
-        String answer = enterText(HelpMessageType.ILLEGAL_ANSWER_FOR_CONTINUE_THE_GAME);
+        String answer = enterText(HelpMessageType.START_GAME.getMessage(), Validators.YES_NO);
         if  (answer.equals(InputTextType.NO.getInputText())) {
             HelpMessageType.THANKS_FOR_ATTENTION.printMessage();
             System.exit(0);
@@ -79,8 +76,7 @@ public class ConsoleGame {
     }
 
     private static boolean wantToContinue(Controller controller) throws IOException {
-        HelpMessageType.CONTINUE_THE_GAME.printMessage();
-        String answer = enterText(HelpMessageType.ILLEGAL_ANSWER_FOR_CONTINUE_THE_GAME);
+        String answer = enterText(HelpMessageType.CONTINUE_THE_GAME.getMessage(), Validators.YES_NO);
         if  (answer.equals(InputTextType.YES.getInputText())) {
             controller.resetGame();
             return true;
@@ -90,30 +86,16 @@ public class ConsoleGame {
         }
     }
 
-    private static String enterText(HelpMessageType helpMessage) throws IOException {
+    private static String enterText(String helpMessage, Validator validator) throws IOException {
+        System.out.println(helpMessage);
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String text = reader.readLine();
-        Predicate<String> validation = getValidation(helpMessage);
-        while (!validation.test(text)) {
-            helpMessage.printMessage();
+        while (!validator.validate(text)) {
+            String message = validator.getErrorMessage(text);
+            System.out.println(message);
             text = reader.readLine();
         }
         return text;
-    }
-
-    private static Predicate<String> getValidation(HelpMessageType helpMessage) {
-        switch (helpMessage) {
-            case ILLEGAL_NAME:
-                return name -> name == null || !Objects.equals(name, "");
-            case ILLEGAL_NUMBER:
-                return number -> number.equals(InputTextType.NUMBER_1.getInputText()) || number.equals(InputTextType.NUMBER_2.getInputText()) || number.equals(InputTextType.NUMBER_3.getInputText()) || number.equals(InputTextType.NUMBER_4.getInputText()) || number.equals(InputTextType.NUMBER_5.getInputText());
-            case ILLEGAL_CHARACTER:
-                return character -> character.equals(InputTextType.CROSS.getInputText()) || character.equals(InputTextType.ZERO.getInputText());
-            case ILLEGAL_ANSWER_FOR_CONTINUE_THE_GAME:
-                return answer -> answer.equals(InputTextType.YES.getInputText()) || answer.equals(InputTextType.NO.getInputText());
-            default:
-                throw new IllegalArgumentException(HelpMessageType.ILLEGAL_HELP_MESSAGE.getMessage());
-        }
     }
 
     private static Player initializePlayer(Player previousPlayer) throws IOException {
@@ -134,8 +116,7 @@ public class ConsoleGame {
     private static String inputPlayerName(PlayerType playerType) throws IOException {
         switch (playerType) {
             case USER:
-                HelpMessageType.ENTER_NAME.printMessage();
-                return enterText(HelpMessageType.ILLEGAL_NAME);
+                return enterText(HelpMessageType.ENTER_NAME.getMessage(), Validators.NAMES);
             case EASY_AI:
                 HelpMessageType.SELECT_AI.printMessage();
                 return "EasyAI";
@@ -151,8 +132,7 @@ public class ConsoleGame {
     }
 
     private static CellState inputPlayerCharacter() throws IOException {
-        HelpMessageType.CHOOSE_CHARACTER.printMessage();
-        String character = enterText(HelpMessageType.ILLEGAL_CHARACTER);
+        String character = enterText(HelpMessageType.CHOOSE_CHARACTER.getMessage(), Validators.CROSS_ZERO);
         if (character.equals(InputTextType.ZERO.getInputText())) {
             return CellState.TAC;
         } else {
@@ -162,8 +142,7 @@ public class ConsoleGame {
 
     private static PlayerType selectPlayerType() throws IOException {
         HelpMessageType.LIST_OF_PLAYER_TYPE.printMessage();
-        HelpMessageType.ENTER_NUMBER.printMessage();
-        String text = enterText(HelpMessageType.ILLEGAL_NUMBER);
+        String text = enterText(HelpMessageType.ENTER_NUMBER.getMessage(), Validators.NUMBERS);
         if (text.equals(InputTextType.NUMBER_1.getInputText())) {
             return PlayerType.USER;
         } else if (text.equals(InputTextType.NUMBER_2.getInputText())) {
@@ -173,9 +152,19 @@ public class ConsoleGame {
         } else if (text.equals(InputTextType.NUMBER_4.getInputText())) {
             return PlayerType.HARD_AI;
         } else {
-            HelpMessageType.ILLEGAL_NUMBER.printMessage();
-            return selectPlayerType();
+            throw new IllegalArgumentException();
         }
+    }
+
+    @Override
+    public boolean validate(String text) {
+
+        return false;
+    }
+
+    @Override
+    public String getErrorMessage(String input) {
+        return null;
     }
 
     public enum HelpMessageType {
