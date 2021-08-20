@@ -30,7 +30,7 @@ public enum Validators implements Validator {
     NUMBERS {
         @Override
         public boolean validate(String input) {
-            return input.equals(ConsoleGame.InputTextType.NUMBER_1.getInputText()) || input.equals(ConsoleGame.InputTextType.NUMBER_2.getInputText()) || input.equals(ConsoleGame.InputTextType.NUMBER_3.getInputText()) || input.equals(ConsoleGame.InputTextType.NUMBER_4.getInputText()) || input.equals(ConsoleGame.InputTextType.NUMBER_5.getInputText());
+            return input.equals(ConsoleGame.InputTextType.NUMBER_1.getInputText()) || input.equals(ConsoleGame.InputTextType.NUMBER_2.getInputText()) || input.equals(ConsoleGame.InputTextType.NUMBER_3.getInputText()) || input.equals(ConsoleGame.InputTextType.NUMBER_4.getInputText());
         }
 
         @Override

@@ -11,7 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class ConsoleGame implements Validator {
+public class ConsoleGame {
     public static void main(String[] args) throws CellException, IOException {
 
         //Print game title
@@ -21,7 +21,7 @@ public class ConsoleGame implements Validator {
         HelpMessageType.RULES.printMessage();
 
         //Start game
-        String answer = enterText(HelpMessageType.START_GAME.getMessage(), Validators.YES_NO);
+        String answer = askUser(HelpMessageType.START_GAME.getMessage(), Validators.YES_NO);
         if  (answer.equals(InputTextType.NO.getInputText())) {
             HelpMessageType.THANKS_FOR_ATTENTION.printMessage();
             System.exit(0);
@@ -76,7 +76,7 @@ public class ConsoleGame implements Validator {
     }
 
     private static boolean wantToContinue(Controller controller) throws IOException {
-        String answer = enterText(HelpMessageType.CONTINUE_THE_GAME.getMessage(), Validators.YES_NO);
+        String answer = askUser(HelpMessageType.CONTINUE_THE_GAME.getMessage(), Validators.YES_NO);
         if  (answer.equals(InputTextType.YES.getInputText())) {
             controller.resetGame();
             return true;
@@ -86,7 +86,7 @@ public class ConsoleGame implements Validator {
         }
     }
 
-    private static String enterText(String helpMessage, Validator validator) throws IOException {
+    private static String askUser(String helpMessage, Validator validator) throws IOException {
         System.out.println(helpMessage);
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String text = reader.readLine();
@@ -116,7 +116,7 @@ public class ConsoleGame implements Validator {
     private static String inputPlayerName(PlayerType playerType) throws IOException {
         switch (playerType) {
             case USER:
-                return enterText(HelpMessageType.ENTER_NAME.getMessage(), Validators.NAMES);
+                return askUser(HelpMessageType.ENTER_NAME.getMessage(), Validators.NAMES);
             case EASY_AI:
                 HelpMessageType.SELECT_AI.printMessage();
                 return "EasyAI";
@@ -132,7 +132,7 @@ public class ConsoleGame implements Validator {
     }
 
     private static CellState inputPlayerCharacter() throws IOException {
-        String character = enterText(HelpMessageType.CHOOSE_CHARACTER.getMessage(), Validators.CROSS_ZERO);
+        String character = askUser(HelpMessageType.CHOOSE_CHARACTER.getMessage(), Validators.CROSS_ZERO);
         if (character.equals(InputTextType.ZERO.getInputText())) {
             return CellState.TAC;
         } else {
@@ -142,7 +142,7 @@ public class ConsoleGame implements Validator {
 
     private static PlayerType selectPlayerType() throws IOException {
         HelpMessageType.LIST_OF_PLAYER_TYPE.printMessage();
-        String text = enterText(HelpMessageType.ENTER_NUMBER.getMessage(), Validators.NUMBERS);
+        String text = askUser(HelpMessageType.ENTER_NUMBER.getMessage(), Validators.NUMBERS);
         if (text.equals(InputTextType.NUMBER_1.getInputText())) {
             return PlayerType.USER;
         } else if (text.equals(InputTextType.NUMBER_2.getInputText())) {
@@ -154,17 +154,6 @@ public class ConsoleGame implements Validator {
         } else {
             throw new IllegalArgumentException();
         }
-    }
-
-    @Override
-    public boolean validate(String text) {
-
-        return false;
-    }
-
-    @Override
-    public String getErrorMessage(String input) {
-        return null;
     }
 
     public enum HelpMessageType {
@@ -187,7 +176,6 @@ public class ConsoleGame implements Validator {
         UNKNOWN_PLAYER("Unknown player type"),
         CHOOSE_CHARACTER("Choose a character [x] or [0] and write him."),
         ILLEGAL_CHARACTER("Illegal name of character."),
-        ILLEGAL_HELP_MESSAGE("Illegal help message."),
         GAME_ENDED_DRAW("Game ended in a draw."),
         THANKS_FOR_ATTENTION("Thank you for your attention. See you later."),
         THANKS_FOR_PLAYING("Thanks for playing."),
@@ -218,8 +206,7 @@ public class ConsoleGame implements Validator {
         NUMBER_1("1"),
         NUMBER_2("2"),
         NUMBER_3("3"),
-        NUMBER_4("4"),
-        NUMBER_5("5");
+        NUMBER_4("4");
 
         private final String inputText;
 
