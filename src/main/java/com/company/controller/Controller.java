@@ -78,7 +78,9 @@ public class Controller {
         Player nextPlayer;
         if (currentPlayer.equals(firstPlayer)) {
             nextPlayer = secondPlayer;
-        } else nextPlayer = firstPlayer;
+        } else {
+            nextPlayer = firstPlayer;
+        }
         return nextPlayer;
     }
 

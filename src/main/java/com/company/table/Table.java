@@ -1,5 +1,7 @@
 package com.company.table;
 
+import com.company.ConsoleGame;
+
 public class Table {
     private final CellState [][] table;
     private int count;
@@ -55,13 +57,13 @@ public class Table {
 
     private void validateValue(CellState value) throws CellException {
         if (value == null) {
-            throw new CellException("Value is NULL");
+            throw new CellException(ConsoleGame.HelpMessageType.VALUE_IS_NULL.getMessage());
         }
     }
 
     private void detectUNSET(CellState cell) throws CellException {
         if (cell != CellState.UNSET) {
-            throw new CellException("Cell is not empty.");
+            throw new CellException(ConsoleGame.HelpMessageType.CELL_NOT_EMPTY.getMessage());
         }
     }
 }

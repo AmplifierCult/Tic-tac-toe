@@ -1,5 +1,7 @@
 package com.company.table;
 
+import com.company.ConsoleGame;
+
 public enum CellState {
     UNSET,
     TIC,
@@ -14,7 +16,7 @@ public enum CellState {
             case TAC:
                 return TIC;
             default:
-                throw new IllegalStateException("Unknown cell state");
+                throw new IllegalStateException(ConsoleGame.HelpMessageType.UNKNOWN_CELL_STATE.getMessage());
         }
     }
 }
