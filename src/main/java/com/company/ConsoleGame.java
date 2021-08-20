@@ -181,7 +181,13 @@ public class ConsoleGame {
         THANKS_FOR_PLAYING("Thanks for playing."),
         UNKNOWN_CELL_STATE("Unknown cell state"),
         VALUE_IS_NULL("Value is NULL"),
-        CELL_NOT_EMPTY("Cell is not empty.");
+        ENTER_CELL_COORDINATES("Enter cell coordinates:"),
+        ENTER_LINE("Enter number of line, № = "),
+        ENTER_COLUMN("Enter number of column, № = "),
+        CELL_NOT_EMPTY("Cell is not empty."),
+        CELL_IS_BUSY("Cell is busy. Choose another."),
+        CELL_COORDINATES_NOT_VALID("Cell coordinates is not a valid. Try again."),
+        ILLEGAL_STATE("Illegal cell state.");
 
         private final String message;
 

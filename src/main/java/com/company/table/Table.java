@@ -66,4 +66,16 @@ public class Table {
             throw new CellException(ConsoleGame.HelpMessageType.CELL_NOT_EMPTY.getMessage());
         }
     }
+
+    public boolean validateCellCoordinates(int numberOfString, int numberOfColumn, Table table) {
+        if (numberOfColumn >= 0 && numberOfColumn <= 2 && numberOfString >= 0 && numberOfString <= 2) {
+            if (!table.getCell(numberOfString, numberOfColumn).equals(CellState.UNSET)) {
+                ConsoleGame.HelpMessageType.CELL_IS_BUSY.printMessage();
+                return false;
+            } else return true;
+        } else {
+            ConsoleGame.HelpMessageType.CELL_COORDINATES_NOT_VALID.printMessage();
+            return false;
+        }
+    }
 }

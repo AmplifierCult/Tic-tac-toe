@@ -32,10 +32,6 @@ public class Controller {
         this.firstPlayer = firstPlayer;
     }
 
-    public Player getSecondPlayer() {
-        return secondPlayer;
-    }
-
     public void setSecondPlayer(Player secondPlayer) {
         this.secondPlayer = secondPlayer;
     }
@@ -170,13 +166,13 @@ public class Controller {
      */
     public void chooseVictory() {
         if (equalValue.equals(CellState.UNSET)) {
-            victory = "draw";
+            setVictory("draw");
             statistics.incrementNumberOfDraws();
         } else if (firstPlayer.getCharacter().equals(equalValue)) {
-            victory = firstPlayer.getName();
+            setVictory(firstPlayer.getName());
             statistics.incrementNumberOfWins();
         } else if (secondPlayer.getCharacter().equals(equalValue)) {
-            victory = secondPlayer.getName();
+            setVictory(secondPlayer.getName());
             statistics.incrementNumberOfLosses();
         }
     }
