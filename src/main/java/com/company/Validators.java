@@ -11,7 +11,7 @@ public enum Validators implements Validator {
 
         @Override
         public String getErrorMessage(String input) {
-            return ConsoleGame.HelpMessageType.CONTINUE_THE_GAME.getMessage();
+            return ConsoleGame.HelpMessageType.ILLEGAL_ANSWER_FOR_CONTINUE_THE_GAME.getMessage();
         }
     },
 
