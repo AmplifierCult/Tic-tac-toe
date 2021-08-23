@@ -21,8 +21,8 @@ public class ConsoleGame {
         HelpMessageType.RULES.printMessage();
 
         //Start game
-        String answer = askUser(HelpMessageType.START_GAME.getMessage(), Validators.YES_NO);
-        if  (answer.equals(InputTextType.NO.getInputText())) {
+        Boolean answer = (Boolean) askUser(HelpMessageType.START_GAME.getMessage(), Validators.YES_NO, Parsers.BOOLEAN);
+        if  (!answer) {
             HelpMessageType.THANKS_FOR_ATTENTION.printMessage();
             System.exit(0);
         }
@@ -76,8 +76,8 @@ public class ConsoleGame {
     }
 
     private static boolean wantToContinue(Controller controller) throws IOException {
-        String answer = askUser(HelpMessageType.CONTINUE_THE_GAME.getMessage(), Validators.YES_NO);
-        if  (answer.equals(InputTextType.YES.getInputText())) {
+        Boolean answer = (Boolean) askUser(HelpMessageType.CONTINUE_THE_GAME.getMessage(), Validators.YES_NO, Parsers.BOOLEAN);
+        if  (answer) {
             controller.resetGame();
             return true;
         } else {
@@ -86,7 +86,7 @@ public class ConsoleGame {
         }
     }
 
-    private static String askUser(String helpMessage, Validator validator) throws IOException {
+    private static <K> K askUser(String helpMessage, Validator validator, Parser<K> parser) throws IOException {
         System.out.println(helpMessage);
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String text = reader.readLine();
@@ -95,7 +95,7 @@ public class ConsoleGame {
             System.out.println(message);
             text = reader.readLine();
         }
-        return text;
+        return parser.parse(text);
     }
 
     private static Player initializePlayer(Player previousPlayer) throws IOException {
@@ -116,7 +116,7 @@ public class ConsoleGame {
     private static String inputPlayerName(PlayerType playerType) throws IOException {
         switch (playerType) {
             case USER:
-                return askUser(HelpMessageType.ENTER_NAME.getMessage(), Validators.NAMES);
+                return (String) askUser(HelpMessageType.ENTER_NAME.getMessage(), Validators.NAMES, Parsers.STRING);
             case EASY_AI:
                 HelpMessageType.SELECT_AI.printMessage();
                 return "EasyAI";
@@ -132,28 +132,12 @@ public class ConsoleGame {
     }
 
     private static CellState inputPlayerCharacter() throws IOException {
-        String character = askUser(HelpMessageType.CHOOSE_CHARACTER.getMessage(), Validators.CROSS_ZERO);
-        if (character.equals(InputTextType.ZERO.getInputText())) {
-            return CellState.TAC;
-        } else {
-            return CellState.TIC;
-        }
+        return (CellState) askUser(HelpMessageType.CHOOSE_CHARACTER.getMessage(), Validators.CROSS_ZERO, Parsers.TIC_TAC);
     }
 
     private static PlayerType selectPlayerType() throws IOException {
         HelpMessageType.LIST_OF_PLAYER_TYPE.printMessage();
-        String text = askUser(HelpMessageType.ENTER_NUMBER.getMessage(), Validators.NUMBERS);
-        if (text.equals(InputTextType.NUMBER_1.getInputText())) {
-            return PlayerType.USER;
-        } else if (text.equals(InputTextType.NUMBER_2.getInputText())) {
-            return PlayerType.EASY_AI;
-        } else if (text.equals(InputTextType.NUMBER_3.getInputText())) {
-            return PlayerType.NORMAL_AI;
-        } else if (text.equals(InputTextType.NUMBER_4.getInputText())) {
-            return PlayerType.HARD_AI;
-        } else {
-            throw new IllegalArgumentException();
-        }
+        return (PlayerType) askUser(HelpMessageType.ENTER_NUMBER.getMessage(), Validators.NUMBERS, Parsers.PLAYER_TYPE);
     }
 
     public enum HelpMessageType {
